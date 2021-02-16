@@ -1,5 +1,5 @@
 # CTSe - Captain Toad Save Editor
-A save game editor for Captain Toad Treasure Tracker (Switch) files. This project uses the [JSON.simple library](https://code.google.com/archive/p/json-simple/).
+A save game editor for Captain Toad Treasure Tracker (Switch) files. This project uses the [org.json library](https://mvnrepository.com/artifact/org.json/json).
 
 ![Screenshot](screenshot.png)
 
