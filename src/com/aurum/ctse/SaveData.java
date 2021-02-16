@@ -1,4 +1,4 @@
-// Copyright © 2020 Aurum
+// Copyright © 2021 Aurum
 //
 // This file is part of "CTSe"
 //
@@ -79,7 +79,7 @@ public class SaveData {
         }
         
         public void setIsOpen(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_IS_OPEN, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_IS_OPEN, state);
         }
         
         public boolean getIsBeaten() {
@@ -87,7 +87,7 @@ public class SaveData {
         }
         
         public void setIsBeaten(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_IS_BEAT, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_IS_BEAT, state);
         }
         
         public boolean getFlag2() {
@@ -95,7 +95,7 @@ public class SaveData {
         }
         
         public void setFlag2(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_2, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_2, state);
         }
         
         public boolean getIsNew() {
@@ -103,7 +103,7 @@ public class SaveData {
         }
         
         public void setIsNew(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_IS_NEW, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_IS_NEW, state);
         }
         
         public boolean getFlag4() {
@@ -111,7 +111,7 @@ public class SaveData {
         }
         
         public void setFlag4(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_4, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_4, state);
         }
         
         public boolean getHasBadgeCondition() {
@@ -119,7 +119,7 @@ public class SaveData {
         }
         
         public void setHasBadgeCondition(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_HAS_BADGE_CONDITION, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_HAS_BADGE_CONDITION, state);
         }
         
         public boolean getHasDotKinopio() {
@@ -127,7 +127,7 @@ public class SaveData {
         }
         
         public void setHasDotKinopio(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_HAS_DOT_KINOPIO, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_HAS_DOT_KINOPIO, state);
         }
         
         public boolean getIsCompleted() {
@@ -135,7 +135,7 @@ public class SaveData {
         }
         
         public void setIsCompleted(boolean state) {
-            flags = BitUtil.toggle(flags, STAGE_FLAG_IS_COMPLETE, state);
+            flags = BitUtil.update(flags, STAGE_FLAG_IS_COMPLETE, state);
         }
         
         public int getCoinNum() {
@@ -365,6 +365,10 @@ public class SaveData {
     
     public boolean isOutdated() {
         return version != LATEST_VERSION;
+    }
+    
+    public boolean isSwitchVersion() {
+        return true;
     }
     
     public void update() {

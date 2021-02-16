@@ -1,4 +1,4 @@
-// Copyright © 2020 Aurum
+// Copyright © 2021 Aurum
 //
 // This file is part of "CTSe"
 //
@@ -16,6 +16,7 @@
 
 package com.aurum.ctse;
 
+import static com.aurum.ctse.CommonAssets.loadIcon;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,9 +25,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.prefs.Preferences;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTree;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -35,6 +39,12 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 public class SaveEditor extends javax.swing.JFrame {
+    private static final ImageIcon[] ICONS_COLLECT_ITEMS = {
+        loadIcon("img/collectItem/unselected.png"),
+        loadIcon("img/collectItem/selected.png"),
+        loadIcon("img/collectItem/selectedAoC.png")
+    };
+    
     private class StageTreeCellRenderer extends DefaultTreeCellRenderer {
         @Override
         public Component getTreeCellRendererComponent(JTree tree,
@@ -42,10 +52,8 @@ public class SaveEditor extends javax.swing.JFrame {
                 boolean leaf, int row, boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             
-            if (value == null || !(value instanceof StageNode))
-                return this;
-            
-            setIcon(CommonAssets.ICONS_NODES[((StageNode)value).getNodeIcon()]);
+            if (value != null || value instanceof StageNode)
+                setIcon(((StageNode)value).getNodeIcon());
             
             return this;
         }
@@ -57,6 +65,7 @@ public class SaveEditor extends javax.swing.JFrame {
     private SaveData saveData;
     private SaveData.StageInfo selectedStageInfo;
     private StageNode selectedStageNode;
+    private Localization localization = Localization.getLocalization();
     
     public SaveEditor() {
         saveFile = null;
@@ -67,46 +76,52 @@ public class SaveEditor extends javax.swing.JFrame {
         initComponents();
         treeStages.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         
-        initLocalization();
+        initLocalizationButtons();
+        populateLocalization();
+        
         enableComponents(false);
         showLevelComponents();
     }
     
-    private void initLocalization() {
-        switch(CTSe.getLocalization()) {
-            case "en_US": radEnglishUs.setSelected(true); break;
-            case "en_UK": radEnglishUk.setSelected(true); break;
-            case "de_DE": radGerman.setSelected(true); break;
+    private void initLocalizationButtons() {
+        for (Entry<String, Object> entry : Localization.getLocalizations().entrySet()) {
+            String id = entry.getKey();
+            JRadioButtonMenuItem btn = new JRadioButtonMenuItem(entry.getValue().toString(), id.equals(localization.getId()));
+            
+            rdgLanguage.add(btn);
+            mnuLanguage.add(btn);
+            
+            btn.addActionListener((java.awt.event.ActionEvent evt) -> {
+                changeLocalization(id);
+            });
         }
-        
-        loadLocalization();
     }
     
-    private void loadLocalization() {
-        mnuFile.setText(CommonAssets.getText("editor.menu.file"));
-        mniNew.setText(CommonAssets.getText("editor.menu.file.new"));
-        mniOpen.setText(CommonAssets.getText("editor.menu.file.open"));
-        mniSave.setText(CommonAssets.getText("editor.menu.file.save"));
-        mniSaveAs.setText(CommonAssets.getText("editor.menu.file.save_as"));
-        mniExit.setText(CommonAssets.getText("editor.menu.file.exit"));
-        mnuLanguage.setText(CommonAssets.getText("editor.menu.language"));
-        mnuHelp.setText(CommonAssets.getText("editor.menu.help"));
-        mniAbout.setText(CommonAssets.getText("editor.menu.help.about"));
+    private void populateLocalization() {
+        mnuFile.setText(localization.getText("editor.menu.file"));
+        mniNew.setText(localization.getText("editor.menu.file.new"));
+        mniOpen.setText(localization.getText("editor.menu.file.open"));
+        mniSave.setText(localization.getText("editor.menu.file.save"));
+        mniSaveAs.setText(localization.getText("editor.menu.file.save_as"));
+        mniExit.setText(localization.getText("editor.menu.file.exit"));
+        mnuLanguage.setText(localization.getText("editor.menu.language"));
+        mnuHelp.setText(localization.getText("editor.menu.help"));
+        mniAbout.setText(localization.getText("editor.menu.help.about"));
         
-        tabAll.setTitleAt(0, CommonAssets.getText("editor.pnlStages.title"));
-        tabAll.setTitleAt(1, CommonAssets.getText("editor.pnlMisc.title"));
+        tabAll.setTitleAt(0, localization.getText("editor.pnlStages.title"));
+        tabAll.setTitleAt(1, localization.getText("editor.pnlMisc.title"));
         
-        chkFlagIsOpen.setText(CommonAssets.getText("editor.chkFlagIsOpen.text"));
-        chkFlagIsNew.setText(CommonAssets.getText("editor.chkFlagIsNew.text"));
-        chkFlagIsBeat.setText(CommonAssets.getText("editor.chkFlagIsBeat.text"));
-        chkFlagIsComplete.setText(CommonAssets.getText("editor.chkFlagIsComplete.text"));
-        chkHasDotKinopio.setText(CommonAssets.getText("editor.chkHasDotKinopio.text"));
-        lblCoinNum.setText(CommonAssets.getText("editor.lblCoinNum.text"));
-        lblClearTime.setText(CommonAssets.getText("editor.lblClearTime.text"));
-        lblLastSavedTime.setText(CommonAssets.getText("editor.lblLastSavedTime.text"));
+        chkFlagIsOpen.setText(localization.getText("editor.chkFlagIsOpen.text"));
+        chkFlagIsNew.setText(localization.getText("editor.chkFlagIsNew.text"));
+        chkFlagIsBeat.setText(localization.getText("editor.chkFlagIsBeat.text"));
+        chkFlagIsComplete.setText(localization.getText("editor.chkFlagIsComplete.text"));
+        chkHasDotKinopio.setText(localization.getText("editor.chkHasDotKinopio.text"));
+        lblCoinNum.setText(localization.getText("editor.lblCoinNum.text"));
+        lblClearTime.setText(localization.getText("editor.lblClearTime.text"));
+        lblLastSavedTime.setText(localization.getText("editor.lblLastSavedTime.text"));
         
-        lblLastGameSavedTime.setText(CommonAssets.getText("editor.lblLastGameSavedTime.text"));
-        lblNumOneUps.setText(CommonAssets.getText("editor.lblNumOneUps.text"));
+        lblLastGameSavedTime.setText(localization.getText("editor.lblLastGameSavedTime.text"));
+        lblNumOneUps.setText(localization.getText("editor.lblNumOneUps.text"));
     }
     
     private void enableComponents(boolean state) {
@@ -116,15 +131,17 @@ public class SaveEditor extends javax.swing.JFrame {
     }
     
     private void showMessageDialog(int dialogType, String text) {
-        JOptionPane.showMessageDialog(this, CommonAssets.getText(text), CTSe.getTitle(), dialogType);
+        JOptionPane.showMessageDialog(this, localization.getText(text), CTSe.TITLE, dialogType);
     }
     
     private int showConfirmDialog(int dialogType, String text) {
-        return JOptionPane.showConfirmDialog(this, CommonAssets.getText(text), CTSe.getTitle(), dialogType);
+        return JOptionPane.showConfirmDialog(this, localization.getText(text), CTSe.TITLE, dialogType);
     }
     
     private void populateData() {
-        reloadTree(saveData.version);
+        // set console version flag
+        int ver = saveData.version | (saveData.isSwitchVersion() ? StageNode.SWITCH_VERSION : StageNode.WII_U_VERSION);
+        reloadTree(ver);
         selectedStageInfo = null;
         
         spnLastGameSavedTime.setValue(new Date(saveData.lastGameSaveTime * 1000));
@@ -138,17 +155,20 @@ public class SaveEditor extends javax.swing.JFrame {
         if (selectedStageInfo != null && selectedStageNode.getStageType() != StageNode.TYPE_NOT_A_STAGE) {
             if (selectedStageNode.hasPreviewImage()) {
                 String stageName = selectedStageNode.getStageName();
+                
+                // VR stages should use the preview images of their original counterparts
                 if (stageName.startsWith("VR"))
                     stageName = stageName.substring(2);
+                
                 lblLevelPreview.setIcon(CommonAssets.loadIcon(String.format("img/stages/%s.png", stageName)));
             }
             
             // Update stage-specific UI stuff
             int collectItemIconIdx = selectedStageNode.hasDlcCollectItem() ? 2 : 1;
-            chkHasCollectItem1.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[collectItemIconIdx]);
-            chkHasCollectItem2.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[collectItemIconIdx]);
-            chkHasCollectItem3.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[collectItemIconIdx]);
-            chkHasBadgeCondition.setText(CommonAssets.getText(String.format("stage.badgeCondition.%s", selectedStageNode.getStageName())));
+            chkHasCollectItem1.setSelectedIcon(ICONS_COLLECT_ITEMS[collectItemIconIdx]);
+            chkHasCollectItem2.setSelectedIcon(ICONS_COLLECT_ITEMS[collectItemIconIdx]);
+            chkHasCollectItem3.setSelectedIcon(ICONS_COLLECT_ITEMS[collectItemIconIdx]);
+            chkHasBadgeCondition.setText(localization.getText(String.format("stage.badgeCondition.%s", selectedStageNode.getStageName())));
             lblChallengeTime.setText(String.format("/ %03d", selectedStageNode.getChallengeTime()));
             
             // Populate player's stage data
@@ -173,7 +193,7 @@ public class SaveEditor extends javax.swing.JFrame {
     
     //--------------------------------------------------------------------------------------------------------------------------
     
-    final void showLevelComponents() {
+    private void showLevelComponents() {
         boolean showPreview = false;
         boolean showHasCollectItem = false;
         boolean showHasBadgeCondition = false;
@@ -183,14 +203,13 @@ public class SaveEditor extends javax.swing.JFrame {
         boolean showFlags = false;
         
         if (selectedStageNode != null && selectedStageNode.getStageType() != StageNode.TYPE_NOT_A_STAGE) {
-            int nodeType = selectedStageNode.getNodeType();
             showPreview = selectedStageNode.hasPreviewImage();
             showHasCollectItem = selectedStageNode.hasCollectItem();
             showHasBadgeCondition = selectedStageNode.hasBadgeCondition();
             showHasDotKinopio = selectedStageNode.hasDotKinopio();
-            showCoinsAndUnkC = nodeType == StageNode.NODE_STAGE;
+            showCoinsAndUnkC = selectedStageNode.isNormalStage();
             showTime = selectedStageNode.hasChallengeTime();
-            showFlags = showCoinsAndUnkC || nodeType == StageNode.NODE_CHAPTER;
+            showFlags = showCoinsAndUnkC || selectedStageNode.isChapterStage();
         }
         
         pnlLevelPreview.setVisible(showPreview);
@@ -219,28 +238,29 @@ public class SaveEditor extends javax.swing.JFrame {
         filLevelInfo.setVisible(true);
     }
     
-    final void changeMenuLanguage(String lang) {
-        if (!CTSe.getLocalization().equals(lang)) {
-            CTSe.setLocalization(lang);
-            CommonAssets.initLocalization();
-            
-            loadLocalization();
-            ((DefaultTreeModel)treeStages.getModel()).reload();
-            expandTree(CommonAssets.getLevelNodeRoot());
-            
-            selectedStageNode = null;
+    private void clearSelectionAndExpandTree() {
+        treeStages.setSelectionPath(null);
+        selectedStageNode = null;
+        ((DefaultTreeModel)treeStages.getModel()).reload();
+        expandTree(StageNode.getRootNode());
+    }
+    
+    private void changeLocalization(String lang) {
+        if (!Localization.getLocalization().getId().equals(lang)) {
+            localization = Localization.setLocalization(lang);
+            populateLocalization();
+            clearSelectionAndExpandTree();
+            selectedStageInfo = null;
             showLevelComponents();
         }
     }
     
-    final void reloadTree(int ver) {
-        CommonAssets.reloadTree(ver);
-        treeStages.setSelectionPath(null);
-        ((DefaultTreeModel)treeStages.getModel()).reload();
-        expandTree(CommonAssets.getLevelNodeRoot());
+    private void reloadTree(int ver) {
+        StageNode.growTree(ver);
+        clearSelectionAndExpandTree();
     }
     
-    final void expandTree(StageNode node) {
+    private void expandTree(StageNode node) {
         for (StageNode n : (ArrayList<StageNode>)Collections.list(node.children()))
             expandTree(n);
         
@@ -253,18 +273,20 @@ public class SaveEditor extends javax.swing.JFrame {
     
     //--------------------------------------------------------------------------------------------------------------------------
     
-    final boolean dropChanges() {
+    private boolean dropChanges() {
         boolean ret = true;
+        
         if (saveData != null) {
             int result = showConfirmDialog(JOptionPane.YES_NO_OPTION, "editor.message.already_editing");
             ret = result == JOptionPane.YES_OPTION;
         }
+        
         return ret;
     }
     
-    final void chooseSaveFile(String title) {
+    private void chooseSaveFile(String title) {
         final JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle(CommonAssets.getText(title));
+        fc.setDialogTitle(localization.getText(title));
         fc.setFileFilter(new FileNameExtensionFilter("Binary (*.bin)", ".bin", "bin"));
         
         String lastdir = Preferences.userRoot().get("ctse_lastFile", null);
@@ -279,7 +301,7 @@ public class SaveEditor extends javax.swing.JFrame {
         Preferences.userRoot().put("ctse_lastFile", saveFile.getPath());
     }
     
-    final void loadSaveDataFromFile() {
+    private void loadSaveDataFromFile() {
         if (saveFile == null)
             return;
         
@@ -298,8 +320,8 @@ public class SaveEditor extends javax.swing.JFrame {
                     saveData = null;
                 }
                 else {
-                    /*if (saveData.isOutdated() && showConfirmDialog(JOptionPane.YES_NO_OPTION, "editor.message.update_save_file") == JOptionPane.YES_OPTION)
-                        saveData.update();*/
+                    //if (saveData.isOutdated() && showConfirmDialog(JOptionPane.YES_NO_OPTION, "editor.message.update_save_file") == JOptionPane.YES_OPTION)
+                    //    saveData.update();
                     populateData();
                 }
             }
@@ -313,7 +335,7 @@ public class SaveEditor extends javax.swing.JFrame {
         enableComponents(saveData != null);
     }
     
-    final void writeSaveDataToFile() {
+    private void writeSaveDataToFile() {
         if (saveFile == null)
             return;
         
@@ -328,8 +350,8 @@ public class SaveEditor extends javax.swing.JFrame {
     
     //--------------------------------------------------------------------------------------------------------------------------
     
-    final void toggleCollectItemFlag(int bit, boolean state) {
-        selectedStageInfo.setCollectItemFlags(BitUtil.toggle(selectedStageInfo.getCollectItemFlags(), bit, state));
+    private void toggleCollectItemFlag(int bit, boolean state) {
+        selectedStageInfo.setCollectItemFlags(BitUtil.update(selectedStageInfo.getCollectItemFlags(), bit, state));
     }
     
     //--------------------------------------------------------------------------------------------------------------------------
@@ -385,15 +407,12 @@ public class SaveEditor extends javax.swing.JFrame {
         mspFile = new javax.swing.JPopupMenu.Separator();
         mniExit = new javax.swing.JMenuItem();
         mnuLanguage = new javax.swing.JMenu();
-        radEnglishUs = new javax.swing.JRadioButtonMenuItem();
-        radEnglishUk = new javax.swing.JRadioButtonMenuItem();
-        radGerman = new javax.swing.JRadioButtonMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mniAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(CTSe.getTitle());
-        setIconImage(CommonAssets.PROGRAM_ICON);
+        setTitle(CTSe.TITLE);
+        setIconImage(CTSe.PROGRAM_ICON);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -401,7 +420,7 @@ public class SaveEditor extends javax.swing.JFrame {
             }
         });
 
-        treeStages.setModel(new DefaultTreeModel(CommonAssets.getLevelNodeRoot()));
+        treeStages.setModel(new DefaultTreeModel(StageNode.getRootNode()));
         treeStages.setCellRenderer(new StageTreeCellRenderer());
         treeStages.setRootVisible(false);
         treeStages.setRowHeight(24);
@@ -512,8 +531,8 @@ public class SaveEditor extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
         pnlLevelInfo.add(chkFlag4, gridBagConstraints);
 
-        chkHasCollectItem1.setIcon(CommonAssets.ICONS_COLLECT_ITEMS[0]);
-        chkHasCollectItem1.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[1]);
+        chkHasCollectItem1.setIcon(ICONS_COLLECT_ITEMS[0]);
+        chkHasCollectItem1.setSelectedIcon(ICONS_COLLECT_ITEMS[1]);
         chkHasCollectItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkHasCollectItem1ActionPerformed(evt);
@@ -521,8 +540,8 @@ public class SaveEditor extends javax.swing.JFrame {
         });
         pnlCollectItem.add(chkHasCollectItem1);
 
-        chkHasCollectItem2.setIcon(CommonAssets.ICONS_COLLECT_ITEMS[0]);
-        chkHasCollectItem2.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[1]);
+        chkHasCollectItem2.setIcon(ICONS_COLLECT_ITEMS[0]);
+        chkHasCollectItem2.setSelectedIcon(ICONS_COLLECT_ITEMS[1]);
         chkHasCollectItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkHasCollectItem2ActionPerformed(evt);
@@ -530,8 +549,8 @@ public class SaveEditor extends javax.swing.JFrame {
         });
         pnlCollectItem.add(chkHasCollectItem2);
 
-        chkHasCollectItem3.setIcon(CommonAssets.ICONS_COLLECT_ITEMS[0]);
-        chkHasCollectItem3.setSelectedIcon(CommonAssets.ICONS_COLLECT_ITEMS[1]);
+        chkHasCollectItem3.setIcon(ICONS_COLLECT_ITEMS[0]);
+        chkHasCollectItem3.setSelectedIcon(ICONS_COLLECT_ITEMS[1]);
         chkHasCollectItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkHasCollectItem3ActionPerformed(evt);
@@ -830,35 +849,6 @@ public class SaveEditor extends javax.swing.JFrame {
 
         mnuLanguage.setMnemonic('L');
         mnuLanguage.setText("Language");
-
-        rdgLanguage.add(radEnglishUs);
-        radEnglishUs.setText("English (US)");
-        radEnglishUs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radEnglishUsActionPerformed(evt);
-            }
-        });
-        mnuLanguage.add(radEnglishUs);
-
-        rdgLanguage.add(radEnglishUk);
-        radEnglishUk.setSelected(true);
-        radEnglishUk.setText("English (UK)");
-        radEnglishUk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radEnglishUkActionPerformed(evt);
-            }
-        });
-        mnuLanguage.add(radEnglishUk);
-
-        rdgLanguage.add(radGerman);
-        radGerman.setText("Deutsch");
-        radGerman.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radGermanActionPerformed(evt);
-            }
-        });
-        mnuLanguage.add(radGerman);
-
         mnbMain.add(mnuLanguage);
 
         mnuHelp.setMnemonic('H');
@@ -934,20 +924,8 @@ public class SaveEditor extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_mniExitActionPerformed
 
-    private void radEnglishUkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radEnglishUkActionPerformed
-        changeMenuLanguage("en_UK");
-    }//GEN-LAST:event_radEnglishUkActionPerformed
-
-    private void radEnglishUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radEnglishUsActionPerformed
-        changeMenuLanguage("en_US");
-    }//GEN-LAST:event_radEnglishUsActionPerformed
-
-    private void radGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radGermanActionPerformed
-        changeMenuLanguage("de_DE");
-    }//GEN-LAST:event_radGermanActionPerformed
-
     private void mniAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAboutActionPerformed
-        showMessageDialog(JOptionPane.INFORMATION_MESSAGE, CTSe.getFullTitle());
+        showMessageDialog(JOptionPane.INFORMATION_MESSAGE, CTSe.FULL_TITLE);
     }//GEN-LAST:event_mniAboutActionPerformed
 
     private void treeStagesValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeStagesValueChanged
@@ -1068,9 +1046,6 @@ public class SaveEditor extends javax.swing.JFrame {
     private javax.swing.JPanel pnlLevelPreview;
     private javax.swing.JPanel pnlMisc;
     private javax.swing.JPanel pnlStages;
-    private javax.swing.JRadioButtonMenuItem radEnglishUk;
-    private javax.swing.JRadioButtonMenuItem radEnglishUs;
-    private javax.swing.JRadioButtonMenuItem radGerman;
     private javax.swing.ButtonGroup rdgLanguage;
     private javax.swing.JScrollPane scrTreeStages;
     private javax.swing.JSpinner spnClearTime;

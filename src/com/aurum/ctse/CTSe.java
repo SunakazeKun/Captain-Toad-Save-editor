@@ -1,4 +1,4 @@
-// Copyright © 2020 Aurum
+// Copyright © 2021 Aurum
 //
 // This file is part of "CTSe"
 //
@@ -16,79 +16,52 @@
 
 package com.aurum.ctse;
 
+import java.awt.image.BufferedImage;
 import java.util.prefs.Preferences;
-import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public final class CTSe {
     private CTSe() {}
     
-    private static final String TITLE = "CTSe -- Captain Toad Save Editor -- © 2020 Aurum";
-    private static final String VERSION = "v1.0 Beta 1";
-    private static final String FULL_TITLE = TITLE + '\n' + VERSION;
-    private static final String GIT_USER = "SunakazeKun";
-    private static final String GIT_REPOSITORY = "CTSe";
-    private static final String GIT_URL = "http://github.com/" + GIT_USER + '/' + GIT_REPOSITORY;
-    
-    public static String getTitle() {
-        return TITLE;
-    }
-    
-    public static String getVersion() {
-        return VERSION;
-    }
-    
-    public static String getFullTitle() {
-        return FULL_TITLE;
-    }
-
-    public static String getGitUser() {
-        return GIT_USER;
-    }
-
-    public static String getGitRepository() {
-        return GIT_REPOSITORY;
-    }
-
-    public static String getGitUrl() {
-        return GIT_URL;
-    }
+    public static final String TITLE = "CTSe -- Captain Toad Save editor -- © 2021 Aurum";
+    public static final String VERSION = "v1.0 Beta 2";
+    public static final String FULL_TITLE = TITLE + '\n' + VERSION;
+    public static final String GIT_USER = "SunakazeKun";
+    public static final String GIT_REPOSITORY = "CTSe";
+    public static final String GIT_URL = "http://github.com/" + GIT_USER + '/' + GIT_REPOSITORY;
+    public static final BufferedImage PROGRAM_ICON = CommonAssets.loadImage("icon.png");
     
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
-        catch (Exception ex) {
-            System.err.print(ex);
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+            System.err.print("Could not set System Look and Feel: " + ex);
         }
         
+        Localization.init();
+        StageNode.init();
         initSettings();
-        CommonAssets.initLocalization();
-        CommonAssets.initLevelNodes();
         
-        JFrame editor = new SaveEditor();
-        editor.setVisible(true);
+        new SaveEditor().setVisible(true);
     }
     
     //--------------------------------------------------------------------------------------------------------------------------
     
-    private static String LOCALIZATION;
-    
+    /**
+     * Loads all preferences from the registry and initializes the last used localization.
+     */
     public static void initSettings() {
         Preferences prefs = Preferences.userRoot();
-        LOCALIZATION = prefs.get("ctse.localization", "en_US");
+        Localization.setLocalization(prefs.get("ctse.localization", "en_US"));
     }
     
+    /**
+     * Stores all preferences in the registry.
+     */
     public static void saveSettings() {
         Preferences prefs = Preferences.userRoot();
-        prefs.put("ctse.localization", LOCALIZATION);
-    }
-    
-    public static String getLocalization() {
-        return LOCALIZATION;
-    }
-    
-    public static void setLocalization(String localization) {
-        LOCALIZATION = localization;
+        prefs.put("ctse.localization", Localization.getLocalization().getId());
     }
 }
