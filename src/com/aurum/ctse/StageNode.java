@@ -122,7 +122,7 @@ public class StageNode extends DefaultMutableTreeNode {
             // read stage information
             String name = strings[buf.getShort() & 0xFFFF];
             int id = buf.getShort();
-            int type = buf.get() & 0xFF;
+            int type = buf.get();
             int nodeInfo = buf.get() & 0xFF;
             int version = buf.get() & 0xFF;
             int flags = buf.get() & 0xFF;
