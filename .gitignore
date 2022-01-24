@@ -1,5 +1,4 @@
 /build
 /dist
 /test
-json_indenter.py
-json_stripper.py
+/nbproject/private
