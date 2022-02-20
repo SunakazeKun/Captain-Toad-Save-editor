@@ -15,9 +15,9 @@ A save game editor for all versions of **Captain Toad Treasure Tracker**. This p
 - All outdated save files can be converted to the latest version (*Switch v1.3.0*). This allows you to replay your old save files from the Wii U or 3DS versions on the Switch!
 - All level and episode data and scores can be edited. This includes collectibles, coin highscore and more.
 - The number of lives and other major game data can be edited.
-- Nice preview images and and a structured tree view for every ingame level.
+- Nice preview images and a structured tree view for every ingame level.
 - The editor supports multiple languages. As of now, English and German are supported.
 
 ## Omissions
-- Support for the *Switch eShop Demo* won't be added in any way since it is not a complete game. Converting its level progress is not useful in either as it would cause major gaps in the game progression.
+- Support for the *Switch eShop Demo* won't be added in any way since it is not a complete game. Converting its level progress is not useful as it would cause major gaps in the game progression.
 - Flexible conversion between *all* game versions is incredibly tedious to implement even for such a small game. *Switch v1.3.0* is the latest version and the one that people are most likely to play on.
