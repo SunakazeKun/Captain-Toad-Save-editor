@@ -1,7 +1,7 @@
 # CTSe - Captain Toad Save Editor
 A save game editor for all versions of **Captain Toad Treasure Tracker**. This project uses [org.json](https://mvnrepository.com/artifact/org.json/json), [Aurum's Java Utility Library](https://github.com/SunakazeKun/AJUL) and [Apache Ant](https://ant.apache.org/) to build distributables. The fundamental features of this project are 100% finished. However, I'm open to include new localizations for other languages if people can provide them.
 
-<img src="https://aurumsmods.com/res/img/CTSe-00.png" width=50%> <img src="https://aurumsmods.com/res/img/CTSe-01.png" width=50%>
+<img src="https://aurumsmods.com/res/img/programs/CTSe00.png" width=50%> <img src="https://aurumsmods.com/res/img/programs/CTSe01.png" width=50%>
 
 ## Features
 - Supports all major game versions:
@@ -12,7 +12,7 @@ A save game editor for all versions of **Captain Toad Treasure Tracker**. This p
   - *Switch v1.1.0* (Co-op Mode)
   - *Switch v1.2.0* (Special Episode DLC)
   - *Switch v1.3.0* (VR Mode)
-- All outdated save files can be converted to the latest version (*Switch v1.3.0*). This allows you to replay your old save files from the Wii U or 3DS versions on the Switch!
+- All outdated save files can be converted to the latest version (*Switch v1.3.0*). This allows you to replay your old save files from Wii U or 3DS on the Switch!
 - All level and episode data and scores can be edited. This includes collectibles, coin highscore and more.
 - The number of lives and other major game data can be edited.
 - Nice preview images and a structured tree view for every ingame level.
