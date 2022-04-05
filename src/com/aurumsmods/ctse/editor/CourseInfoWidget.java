@@ -18,7 +18,7 @@
 package com.aurumsmods.ctse.editor;
 
 import com.aurumsmods.ctse.format.StageNode;
-import com.aurumsmods.ajul.util.BitUtil;
+import com.aurumsmods.ajul.BitUtil;
 import com.aurumsmods.ctse.CTSe;
 import com.aurumsmods.ctse.Localization;
 import com.aurumsmods.ctse.format.CourseInfo;

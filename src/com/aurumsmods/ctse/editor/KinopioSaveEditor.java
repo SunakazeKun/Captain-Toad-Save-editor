@@ -17,7 +17,7 @@
 package com.aurumsmods.ctse.editor;
 
 import com.aurumsmods.ctse.format.StageNode;
-import com.aurumsmods.ajul.util.SwingUtil;
+import com.aurumsmods.ajul.SwingUtil;
 import com.aurumsmods.ctse.CTSe;
 import com.aurumsmods.ctse.Localization;
 import com.aurumsmods.ctse.format.KinopioSaveData;

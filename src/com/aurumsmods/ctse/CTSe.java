@@ -16,8 +16,8 @@
  */
 package com.aurumsmods.ctse;
 
-import com.aurumsmods.ajul.util.ResourceLoader;
-import com.aurumsmods.ajul.util.SwingUtil;
+import com.aurumsmods.ajul.ResourceLoader;
+import com.aurumsmods.ajul.SwingUtil;
 import com.aurumsmods.ctse.editor.KinopioSaveEditor;
 import com.aurumsmods.ctse.format.StageNode;
 import com.aurumsmods.ctse.format.KinopioSaveException;
@@ -34,9 +34,7 @@ import org.json.JSONTokener;
  * @author Aurum
  */
 public class CTSe {
-    private CTSe() {
-        throw new IllegalStateException("Instantiation of this class is forbidden!");
-    }
+    private CTSe() { throw new IllegalStateException(); }
     
     public static final ResourceLoader ASSET_LOADER = new ResourceLoader(CTSe.class);
     public static final BufferedImage PROGRAM_ICON = ASSET_LOADER.readImage("/assets/icon.png");
@@ -44,7 +42,7 @@ public class CTSe {
     public static final String AUTHOR = "Aurum";
     public static final String TITLE = "CTSe";
     public static final String LONG_TITLE = "CTSe -- Captain Toad Treasure Tracker Save Editor";
-    public static final String VERSION = "v1.1";
+    public static final String VERSION = "v1.1.1";
     public static final String COPYRIGHT = "Copyright © 2022 Aurum";
     public static final String FULL_TITLE = String.join(" -- ", LONG_TITLE, VERSION, COPYRIGHT);
     
