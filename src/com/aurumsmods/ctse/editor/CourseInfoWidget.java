@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Aurum
+ * Copyright (C) 2022 - 2025 Aurum
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -634,7 +634,7 @@ final class CourseInfoWidget extends javax.swing.JPanel {
         if (blockInput)
             return;
         
-        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 1, chkCollectItem1.isSelected());
+        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 0, chkCollectItem1.isSelected());
         editor.needSaveChanges();
     }//GEN-LAST:event_chkCollectItem1ActionPerformed
 
@@ -642,7 +642,7 @@ final class CourseInfoWidget extends javax.swing.JPanel {
         if (blockInput)
             return;
         
-        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 2, chkCollectItem2.isSelected());
+        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 1, chkCollectItem2.isSelected());
         editor.needSaveChanges();
     }//GEN-LAST:event_chkCollectItem2ActionPerformed
 
@@ -650,7 +650,7 @@ final class CourseInfoWidget extends javax.swing.JPanel {
         if (blockInput)
             return;
         
-        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 3, chkCollectItem3.isSelected());
+        courseInfo.collectItemFlags = BitUtil.update(courseInfo.collectItemFlags, 2, chkCollectItem3.isSelected());
         editor.needSaveChanges();
     }//GEN-LAST:event_chkCollectItem3ActionPerformed
 

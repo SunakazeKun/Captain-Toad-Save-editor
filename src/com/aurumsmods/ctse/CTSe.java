@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Aurum
+ * Copyright (C) 2022 - 2025 Aurum
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ public class CTSe {
     public static final String AUTHOR = "Aurum";
     public static final String TITLE = "CTSe";
     public static final String LONG_TITLE = "CTSe -- Captain Toad Treasure Tracker Save Editor";
-    public static final String VERSION = "v1.1.1";
-    public static final String COPYRIGHT = "Copyright © 2022 Aurum";
+    public static final String VERSION = "v1.1.2";
+    public static final String COPYRIGHT = "Copyright © 2025 Aurum";
     public static final String FULL_TITLE = String.join(" -- ", LONG_TITLE, VERSION, COPYRIGHT);
     
     public static void main(String[] args) throws IOException, KinopioSaveException {
